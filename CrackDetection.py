@@ -3,9 +3,13 @@ from cv2 import VideoCapture
 import numpy as np
 import cv2
 from matplotlib import pyplot as plt
+import glob
+from PIL import Image
+import requests
 
 # read a cracked sample image
-img = cv2.imread('upload/1.jpg')
+img = cv2.imread('Input-Set/Cracked_07.jpg')
+# images = [cv2.imread(file) for file in glob.glob("Output-Set/*.jpg")]
 # ====================================
 # videoCaptureObject = cv2.VideoCapture(0)
 # result = True
@@ -52,7 +56,7 @@ keypoints, descriptors = orb.detectAndCompute(closing, None)
 featuredImg = cv2.drawKeypoints(closing, keypoints, None)
 
 # Create an output image
-cv2.imwrite('Output-Set/CrackDetected-7.jpg', featuredImg)
+# cv2.imwrite('Output-Set/CrackDetected-7.jpg', featuredImg)
 
 # Use plot to show original and output image
 plt.subplot(121),plt.imshow(img)
@@ -60,3 +64,24 @@ plt.title('Original'),plt.xticks([]), plt.yticks([])
 plt.subplot(122),plt.imshow(featuredImg,cmap='gray')
 plt.title('Output Image'),plt.xticks([]), plt.yticks([])
 plt.show()
+
+
+
+
+
+gray_version = cv2.cvtColor(featuredImg, cv2.COLOR_BGR2GRAY)
+
+a = ""
+if cv2.countNonZero(gray_version) == 0:
+    a = "No Cracks :)"
+
+else:
+    a = "Cracked Image :("
+
+
+urii = "https://619356b8d3ae6d0017da84d0.mockapi.io/crack-detection/1"
+
+
+x = requests.put(urii, {'result' : a, "id":1})
+
+print(x.text)
